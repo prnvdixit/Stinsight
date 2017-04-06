@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 '''
 To highlight occurences of the word "Assumptions" run this in your VIM :-
 
@@ -15,7 +18,6 @@ To highlight occurences of the word "Assumptions" run this in your VIM :-
 import pandas as pd
 
 #df = pd.read_csv("/home/pranav/Desktop/student_data.csv")
-
 df = pd.read_csv("student_data.csv")
 
 
@@ -24,8 +26,30 @@ df = pd.read_csv("student_data.csv")
 
 
 #print(df.shape)
+        # (395, 31)
 #print(df.describe())
-#print(df["passed"].value_counts())
+#print(df["passed"].value_counts())     
+        # yes 265
+        # no 130
+
+'''
+Looking at the results obtained in this section, following observations were made :-
+
+- There are no null values to be taken care of. 
+(By seeing total number of rows from 'df.shape' and count in each column of 'df.describe()')
+
+- Numerical data is present in only 13 columns out of total 31 columns, so appropriate
+assumptions have to be taken to analyse the data and convert them into corresponding numerical values.
+
+- The data is rarely skewed as in nearly all cases, the mean is almost equal to median.
+
+- The number of people passing the course are signficantly higher than the ones failing,
+so data needs to be appropriately changed so that in both test and training data, distribution
+is somewhat proportional.
+
+- There are 31 features, some of these wouldn't be too much correlated with the "passed" feature,
+these features would be dropped later.
+'''
 
 
 ######################################################################################################
@@ -47,24 +71,35 @@ for col in col_name :
 
 
 #print(df["Mjob"].value_counts())
+        #other 141
+        #services 103
+        #at_home 59
+        #teacher 58
+        #health 34
 #print(df["Fjob"].value_counts())
+        #other 217
+        #services 111
+        #teacher 29
+        #at_home 20
+        #health 18
 
-
+        
 job_assist_studies_level = {"services" : 1, "other" : 0, "teacher" : 2, "at_home" : 2, "health" : 0}
 # Assumptions :-
-# If the Parent is at house for most of the time - Expected to assist his ward more
-# Else if the Parent is him/her self a teacher - Expected to be a better guide of ward
-# Else - 9-5 job i.e. no time for family or assisting the ward in studies
+# If the Parent is at house for most of the time - Expected to assist his ward more.
+# Else if the Parent is him/her self a teacher - Expected to be a better guide of ward.
+# Else - 9-5 job i.e. no time for family or assisting the ward in studies.
 
 
 #print(df["famsize"].value_counts())
-
+        #GT3 281
+        #LE3 114
 
 support_family_type = {"GT3" : 1, "LE3" : 0}
 # Assumptions :-
 # To simplify the analysis, 
-# GT3 i.e. family size greater than 3 is assumed to comprise of Mother, Father, Two siblings or more, thus providing more support to ward for studies.
-# LE3 i.e. family size less than equal to 3 is assumed to comprise of Father, Mother and a single child, thus providing less support to ward for studies..
+# GT3 i.e. family size greater than 3 is assumed to comprise of Mother, Father, Two siblings or more, thus providing more guidance to ward for studies.
+# LE3 i.e. family size less than equal to 3 is assumed to comprise of Father, Mother and a single child, thus providing less guidance to ward for studies.
 
 
 parent_both_or_not = {"A" : 0, "T" : 1}
@@ -74,21 +109,21 @@ parent_both_or_not = {"A" : 0, "T" : 1}
 
 urban_rural = {"U" : 1, "R" : 0}
 # Assumptions :-
-# It is general observation that people in urban areas have more exposure thanks to good peer-study groups
+# It is general observation that people in urban areas have more exposure thanks to good peer-study groups.
 
 
 reason_school = {"course" : 2, "reputation" : 1, "home" : 0, "other" : 0}
 # Assumptions :-
-# The ward would have been more interested in studies if his preferable course or school would have been choosen
-# In all other cases, he relunctantly accepted the course
+# The ward would have been more interested in studies if his preferable course or school would have been choosen.
+# In all other cases, he relunctantly accepted the course making it a choice by either neutral or somewhat negative mindset.
 
 guardian_assist = {"mother" : 1, "other" : 1, "father" : 2}
 # Assumptions :-
-# As according to expected strictness from guardian towards studies
+# As according to expected strictness from guardian towards studies.
 
 school = {"GP" : 0, "MS" : 1}
 # Assumptions :-
-# Baseed on the reviews on their facebook pages, quality of education at these schools was assumed
+# Baseed on the reviews on their facebook pages, quality of education at these schools was assumed.
 
 
 gender = {"F" : 0, "M" : 1}
@@ -134,6 +169,7 @@ for i in columns_to_drop :
 #print(df.shape)
 #print(df.head())
 #print(df.corr("pearson"))
+        # Found out those features, on which "passed" feature hardly depends upon.
 
 
 ##########################################################################################################
@@ -145,8 +181,10 @@ from sklearn.model_selection import train_test_split
 
 X_train, X_test, Y_train, Y_test = train_test_split(df[list(df.columns[:-1])], df[df.columns[-1]], test_size = 0.4, random_state = 0)
 
-#print(X_train.count(axis = 0)) = 237
-#print(X_test.count(axis = 0))  = 158
+#print(X_train.count(axis = 0))
+        #237
+#print(X_test.count(axis = 0))
+        #158
 
 
 ##########################################################################################################
@@ -166,6 +204,8 @@ Y_pred = classifier.predict(X_test)
 
 
 from collections import Counter, OrderedDict
+# Counter to store the Confusion-matrix and OrderedDict to have the column-names show
+# up at start of the data (By inserting column header at first before inserting the Confusion matrix data into the dict)
 
 confusion_matrix = Counter()
 
@@ -181,6 +221,7 @@ confusion_matrix = dict(confusion_matrix)
 
 confusion_dict = OrderedDict()
 confusion_dict[("Expected-Predicted")] = "Frequency"
+# Adding the column header to the OrderedDict initially.
 
 for (i, j) in confusion_matrix.items() :
     confusion_dict[i] = j
@@ -199,3 +240,15 @@ print(conf_mat_df.head(), '\n')
 from sklearn.metrics import accuracy_score
 
 print("Accuracy of the model is {:.2f}%" .format(accuracy_score(Y_test, Y_pred) * 100))
+
+'''
+FINAL OUTPUT :-
+
+Expected-Predicted  Frequency
+(False, True)              42
+(True, False)              16
+(False, False)              7
+(True, True)               93 
+
+Accuracy of the model is 69.62%
+'''
