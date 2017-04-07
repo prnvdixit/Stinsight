@@ -27,7 +27,7 @@ df = pd.read_csv("student_data.csv")
 #print(df.shape)
         # (395, 31)
 #print(df.describe())
-#print(df["passed"].value_counts())     
+#print(df["passed"].value_counts())
         # yes 265
         # no 130
 
@@ -209,6 +209,10 @@ def time_for_each_model_implementation(model_func, best_accuracy_score, best_mod
     #print("Accuracy is {:.2f}%" .format(score * 100))
     #print('\n' * 2)
 
+    # Ouput obtained after un-commneting the above lines can be seen in "Which is the best model to use ?"
+    # section of the README.md of 'Stinsight' repository at 
+    # https://github.com/prnvdixit/Stinsight/blob/master/README.md
+
 
     # Only if the accuracy of the present model is better or same than all previous ones
     # AND the time taken in fitting and predicting is BETTER than previous ones, we will
@@ -231,9 +235,9 @@ from sklearn.tree import DecisionTreeClassifier
 classifier = [()] * 7
 
 # Storing the known models for given classification problem
-classifier[0] = (SVC(kernel = "linear"), "SVC - Linear")
-classifier[1] = (SVC(kernel = "poly"), "SVC - Polynomial")
-classifier[2] = (SVC(kernel = "rbf"), "SVC - Radial Basis Function")
+classifier[0] = (SVC(kernel = "linear"), "Support Vector Machine - Linear")
+classifier[1] = (SVC(kernel = "poly"), "Support Vector Machine - Polynomial")
+classifier[2] = (SVC(kernel = "rbf"), "Support Vector Machine - Radial Basis Function")
 
 classifier[3] = (LogisticRegression(), "Logistic Regression")
 classifier[4] = (DecisionTreeClassifier(), "Decision Tree")
@@ -244,7 +248,7 @@ classifier[6] = (RandomForestClassifier(n_estimators = 25, min_samples_split = 2
 # The variables deciding which out of all the models is best among all
 best_model = classifier[0][0]
 best_model_name = classifier[0][1]
-best_model_time = 1000
+best_model_time = 1
 best_accuracy_score = 0.0
 
 
