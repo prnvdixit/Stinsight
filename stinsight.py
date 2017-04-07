@@ -3,7 +3,6 @@
 
 '''
 To highlight occurences of the word "Assumptions" run this in your VIM :-
-
 :match Todo /Assumptions/
 '''
 
@@ -35,7 +34,7 @@ df = pd.read_csv("student_data.csv")
 '''
 Looking at the results obtained in this section, following observations were made :-
 
-- There are no null values to be taken care of. 
+- There are no null values to be taken care of.
 (By seeing total number of rows from 'df.shape' and count in each column of 'df.describe()')
 
 - Numerical data is present in only 13 columns out of total 31 columns, so appropriate
@@ -83,7 +82,7 @@ for col in col_name :
         #at_home 20
         #health 18
 
-        
+
 job_assist_studies_level = {"services" : 1, "other" : 0, "teacher" : 2, "at_home" : 2, "health" : 0}
 # Assumptions :-
 # If the Parent is at house for most of the time - Expected to assist his ward more.
@@ -179,6 +178,8 @@ for i in columns_to_drop :
 from sklearn.model_selection import train_test_split
 # sklearn.cross_validation is set to be deprecated in next update i.e. 0.20
 
+global X_train, X_test, Y_train, Y_test
+
 X_train, X_test, Y_train, Y_test = train_test_split(df[list(df.columns[:-1])], df[df.columns[-1]], test_size = 0.4, random_state = 0)
 
 #print(X_train.count(axis = 0))
@@ -188,15 +189,74 @@ X_train, X_test, Y_train, Y_test = train_test_split(df[list(df.columns[:-1])], d
 
 
 ##########################################################################################################
-'''SVM MODEL IMPLEMENTATION'''
+'''IMPLEMENTATION OF DIFFERENT MODELS AND COMPARIOSN BETWEEN THEM'''
+
+import time
+from sklearn.metrics import accuracy_score
+
+
+def time_for_each_model_implementation(model_func, best_accuracy_score, best_model, best_model_time) :
+    start_time = time.time()
+    model_func.fit(X_train, Y_train)
+    Y_pred = model_func.predict(X_test)
+    end_time = time.time()
+
+    time_taken = end_time - start_time
+    score = accuracy_score(Y_test, Y_pred)
+
+
+    #print("Total execution time : {:.1f}" .format((time_taken) * 1000), "milli seconds")
+    #print("Accuracy is {:.2f}%" .format(score * 100))
+    #print('\n' * 2)
+
+
+    # Only if the accuracy of the present model is better or same than all previous ones
+    # AND the time taken in fitting and predicting is BETTER than previous ones, we will
+    # include the model
+    if score >= best_accuracy_score and time_taken < best_model_time :
+        best_accuracy_score = score
+        best_model = model_func
+        best_model_time = time_taken
+
+    return (best_accuracy_score, best_model, best_model_time)
 
 
 from sklearn.svm import SVC
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier
 
-classifier = SVC(kernel = "linear")
-classifier.fit(X_train, Y_train)
 
-Y_pred = classifier.predict(X_test)
+# The list storing the model-functions and their names
+classifier = [()] * 7
+
+# Storing the known models for given classification problem
+classifier[0] = (SVC(kernel = "linear"), "SVC - Linear")
+classifier[1] = (SVC(kernel = "poly"), "SVC - Polynomial")
+classifier[2] = (SVC(kernel = "rbf"), "SVC - Radial Basis Function")
+
+classifier[3] = (LogisticRegression(), "Logistic Regression")
+classifier[4] = (DecisionTreeClassifier(), "Decision Tree")
+classifier[5] = (RandomForestClassifier(n_estimators = 100), "Random Forest")
+classifier[6] = (RandomForestClassifier(n_estimators = 25, min_samples_split = 25, max_depth = 7, max_features = 1), "Random Forest (Optimised)")
+
+
+# The variables deciding which out of all the models is best among all
+best_model = classifier[0][0]
+best_model_name = classifier[0][1]
+best_model_time = 1000
+best_accuracy_score = 0.0
+
+
+for (model_func, model_name) in classifier :
+    #print(model_name, '\n')
+    (best_accuracy_score, best_model, best_model_time) = time_for_each_model_implementation(model_func, best_accuracy_score, best_model, best_model_time)
+    if best_model == model_func :
+        best_model_name = model_name
+
+print("Based on the accuracy and time taken, the best model is", best_model_name, "\n\nConfusion Matrix :-")
+best_model.fit(X_train, Y_train)
+Y_pred = best_model.predict(X_test)
 
 
 ###########################################################################################################
@@ -244,11 +304,16 @@ print("Accuracy of the model is {:.2f}%" .format(accuracy_score(Y_test, Y_pred) 
 '''
 FINAL OUTPUT :-
 
+Based on the accuracy and time taken, the best model is Logistic Regression
+
+Confusion Matrix :-
+
 Expected-Predicted  Frequency
 (False, True)              42
-(True, False)              16
+(True, False)              12
 (False, False)              7
-(True, True)               93 
+(True, True)               97
 
 Accuracy of the model is 69.62%
+
 '''
