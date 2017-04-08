@@ -26,11 +26,11 @@ sudo -H pip3 install pandas
 
 ## Observations and Evaluating Criterions
 
-### 1. In which class of problems, does this qualify ?
+### 1. In which class of problems, does this qualify?
 
 This is a classification problem. The reason for terming it as a classification problem being, we are asked to identify students who might end up failing the final exam. 
 
-Thus, we need to identify such students and intervene before its too late. Or in other words, we have to classify whole group of students into two sections - Ones who are expected to fail the course and others who are expected to pass the course.
+Thus, we need to identify such students and intervene before it's too late. Or in other words, we have to classify the whole group of students into two sections - Ones who are expected to fail the course and others who are expected to pass the course.
 
 ### 2. Observations from Given Data
 
@@ -41,7 +41,7 @@ Thus, we need to identify such students and intervene before its too late. Or in
 - Number of students who failed: 130
 - Number of columns with numeral values: 13
 
-### 3. What are the features and Relevant Target ?
+### 3. What are the features and Relevant Target?
 
 ```
 Feature column(s):-
@@ -53,63 +53,63 @@ Target column: passed
 ```
 
 
-### 4. Which is the best model to use ?
+### 4. Which is the best model to use?
 
 ```
 
 Support Vector Machine - Linear 
 
-Total execution time : 23.7 milli seconds
+Total execution time: 23.7 milliseconds
 Accuracy is 69.62%
 
 
 Support Vector Machine - Polynomial 
 
-Total execution time : 478.0 milli seconds
+Total execution time: 478.0 milliseconds
 Accuracy is 63.92%
 
 
 Support Vector Machine - Radial Basis Function 
 
-Total execution time : 8.7 milli seconds
+Total execution time: 8.7 milliseconds
 Accuracy is 66.46%
 
 
 Logistic Regression 
 
-Total execution time : 2.7 milli seconds
+Total execution time: 2.7 milliseconds
 Accuracy is 69.62%
 
 
 Decision Tree 
 
-Total execution time : 1.7 milli seconds
+Total execution time: 1.7 milliseconds
 Accuracy is 56.33%
 
 
 Random Forest 
 
-Total execution time : 201.7 milli seconds
+Total execution time: 201.7 milliseconds
 Accuracy is 69.62%
 
 
 Random Forest (Optimised) 
 
-Total execution time : 47.6 milli seconds
+Total execution time: 47.6 milliseconds
 Accuracy is 63.29%
 
 ```
 
-Based on the statistics obtained, Logistic Regression provides the best performance and also in least time. 
+Based on the statistics obtained, Logistic Regression provides the best performance and also in the least time. 
 
-The other models didn't performed well in comparison with Logistic regression. Though, Logistic Regression appears to be a clear winner in both measures used to decide the best model i.e. performance and training and testing time, I would've still choosen to trade off the training time for the higher performance. The reason being that failing a course in school can have some adverse effect on mental and pyschological health of student, making accuracy a dominant factor in comparing different models.
+The other models didn't perform well in comparison with Logistic regression. Though Logistic Regression appears to be a clear winner in both measures used to decide the best model i.e. performance and training and testing time, I would've still chosen to trade off the training time for the higher performance. The reason being that failing a course in school can have some adverse effect on the mental and psychological health of the student, making accuracy a dominant factor in comparing different models.
 
-Thus, as the predictions needs to be very accurate, we would have to value the accuracy more as compared to training and testing time.
+Thus, as the predictions need to be very accurate, we would have to value the accuracy more as compared to training and testing time.
 
 
 ## Appendix
 
-Attributes for Data Set along with the Data Set itself can be found at [UCI ML Repository](https://archive.ics.uci.edu/ml/datasets/Student+Performance)
+Attributes for Data Set along with the DataSet itself can be found at [UCI ML Repository](https://archive.ics.uci.edu/ml/datasets/Student+Performance)
 
 
 ## Author
@@ -119,7 +119,7 @@ Attributes for Data Set along with the Data Set itself can be found at [UCI ML R
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/prnvdixit/Stinsight/blob/master/LICENSE.md) file for details
 
 ## Acknowledgments
 
